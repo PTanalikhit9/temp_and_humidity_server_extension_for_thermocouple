@@ -5,6 +5,8 @@
 #include <TimeLib.h>
 #include <Ethernet.h>
 #include <EthernetUdp.h>
+#include "mbed.h" // for thermocouple
+#include "MAX31856.h" // for thermocouple
 
 #define TCP_FLAGS_FIN_V 1    //as declared in net.h
 #define TCP_FLAGS_ACK_V 0x10 //as declared in net.h
@@ -77,6 +79,18 @@ void setup()
     delay(500);
     resetFunc();
   }
+  
+  // Add your code snippet here
+  // Hardware serial port over USB micro
+  Serial serial(USBTX, USBRX); // this could be modified as the system use the ethernet module ******
+
+  //SPI spi(SPIO MOSI,SPIO MISO,SPIO SCK);
+  SPI spi(P2_1, P2_2, P2_0);
+  //----------------------------------------------------------
+
+  //Thermocouples
+  MAX31856 Thermocouple(spi, P2_3);
+  Thermocouple.setThermocoupleType(MAX31856_TCTYPE_T);
   
   Serial.println(Ethernet.localIP());
   Serial.println(Ethernet.gatewayIP());
@@ -239,7 +253,10 @@ void loop()
               }
               
             }
-            
+            if(temperature_TC>=TEMP_LIMIT)//added
+            {
+              client.println(formatString(buf, "<br><strong>!!! SENSOR %d DETECTED HIGH TEMPERATURE !!!</strong>"));
+            }//added
             break;
           }
           else
@@ -404,6 +421,11 @@ void MeasureHnT()
     h[i]=dht[i].getHumidity();
     t[i]=dht[i].getTemperature();
   }
+  
+  float temperature_TC, temperature_CJ; //added
+  //Make loop here, may be while(True){...}
+  temperature_TC=Thermocouple.readTC();
+  temperature_CJ=Thermocouple.readCJ(); //added
   
   int tmp=0;
   for(int i=0; i<SENSOR_NUM; i++)
