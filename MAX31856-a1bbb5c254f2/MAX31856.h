@@ -372,6 +372,11 @@ public:
     */
     bool setThermocoupleType(uint8_t val);
     
+//*****************************************************************************    
+//This is an additional part for selecting the type of the thermocouple.
+//*****************************************************************************    
+    void setThermocoupleType(uint8_t type);
+
 
 //*****************************************************************************    
 //Functions for register MASK
