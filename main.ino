@@ -5,8 +5,8 @@
 #include <TimeLib.h>
 #include <Ethernet.h>
 #include <EthernetUdp.h>
-#include "mbed.h" // for thermocouple
-#include "MAX31856.h" // for thermocouple
+#include "mbed.h" //added
+#include "MAX31856.h" //added
 
 #define TCP_FLAGS_FIN_V 1    //as declared in net.h
 #define TCP_FLAGS_ACK_V 0x10 //as declared in net.h
@@ -80,17 +80,19 @@ void setup()
     resetFunc();
   }
   
+  //added
   // Add your code snippet here
   // Hardware serial port over USB micro
-  Serial serial(USBTX, USBRX); // this could be modified as the system use the ethernet module ******
+  Serial serial(USBTX, USBRX); // this could be modified as the system use the ethernet module ****** (before run)
 
   //SPI spi(SPIO MOSI,SPIO MISO,SPIO SCK);
-  SPI spi(P2_1, P2_2, P2_0);
+  SPI spi(P2_1, P2_2, P2_0); //change pin (before run)
   //----------------------------------------------------------
 
   //Thermocouples
-  MAX31856 Thermocouple(spi, P2_3);
+  MAX31856 Thermocouple(spi, P2_3); //(before run)
   Thermocouple.setThermocoupleType(MAX31856_TCTYPE_T);
+  //added
   
   Serial.println(Ethernet.localIP());
   Serial.println(Ethernet.gatewayIP());
@@ -253,6 +255,8 @@ void loop()
               }
               
             }
+            client.println(formatString(buf, "<br>Sensor %d<br>"
+                                             "Temperature_HJ: %f deg C, Temperature_HJ: %f deg C %%<br>", temperature_TC, temperature_CJ));
             if(temperature_TC>=TEMP_LIMIT)//added
             {
               client.println(formatString(buf, "<br><strong>!!! SENSOR %d DETECTED HIGH TEMPERATURE !!!</strong>"));
