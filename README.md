@@ -3,3 +3,8 @@ This is an extension of the temperature and humidity sensor server project that 
 
 For mbed 2 it is available at https://developer.mbed.org/users/mbed_official/code/mbed-dev/
 For mbed 5 have a look at https://github.com/ARMmbed/mbed-os
+
+
+aa, ff - temp disp
+
+bb-ee - gui
